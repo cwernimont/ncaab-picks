@@ -1,0 +1,129 @@
+NCAA Tournament Betting Analysis: Key Factors & Frameworks
+March 2026 | Based on Bart Torvik advanced metrics and historical ATS data
+
+Overview
+This document outlines the most important quantitative and structural factors for predicting spread and total outcomes in the NCAA Men's Basketball Tournament. It is intended for use in training a predictive model and integrates insights from Bart Torvik's tempo-free efficiency system with historical ATS trends.
+
+1. Core Modeling Foundation: Tempo-Free Efficiency
+The entire Torvik system is built on points per possession (PPP) rather than raw scoring, eliminating pace as a confounding variable.
+Key Metrics (from barttorvik.com)
+MetricDescriptionPredictive UseAdjOEAdjusted Offensive Efficiency — points scored per 100 possessions, opponent-adjustedPrimary spread inputAdjDEAdjusted Defensive Efficiency — points allowed per 100 possessions, opponent-adjustedPrimary spread input; higher weight than offenseAdjTempoAdjusted possessions per 40 minutesPrimary totals inputeFG%Effective Field Goal % — accounts for 3pt value, pace-independentShooting environment signalBarthagPower rating; win probability vs. average D1 teamMoneyline / win probability baseWABWins Above Bubble — quality of schedule-adjusted performanceTournament seed vs. efficiency gap signal
+Spread Calculation Logic
+Expected Score (Team A) = Team A AdjOE × (Team B AdjDE / 100)
+Expected Score (Team B) = Team B AdjOE × (Team A AdjDE / 100)
+Expected Possessions = Blended tempo of both teams
+Raw Spread = (Expected Score A − Expected Score B) scaled to expected possessions
+Home Court Adjustment
+
+Apply ±1.4% to each team's AdjOE and AdjDE for home/away
+Equivalent to approximately 3.5 points per game
+All tournament games are neutral site — no home court adjustment applied
+
+
+2. Defense Outweighs Offense in March
+Finding: Defensive efficiency is a stronger predictor of tournament ATS outcomes than offensive efficiency.
+
+Teams ranked inside the top 30 nationally in AdjDE outperform seed expectations in single-elimination play
+Tournament games are played on neutral sites against unfamiliar opponents — offensive systems struggle to replicate regular-season efficiency
+Defensive ratings are more stable across venue and opponent contexts
+Allowed eFG% (opponent shooting quality suppression) is the single most impactful defensive sub-metric on Barthag
+
+Model implication: Weight AdjDE more heavily than AdjOE when projecting spread outcomes. A suggested ratio based on research is approximately 55% defense / 45% offense in efficiency differential calculations.
+
+3. Seeding vs. Spread: The Core Disconnect
+Finding: Seed number has no statistically significant impact on ATS outcomes.
+
+Books partially set lines based on seed; public money reinforces this
+The market systematically overvalues higher seeds, inflating spreads beyond what efficiency differentials support
+This creates exploitable inefficiencies, particularly for 10–13 seeds with strong defensive profiles
+
+The 5 vs. 12 Seed ATS Pattern
+
+Since 2012: No. 5 seeds are 20-27-1 ATS in first-round games vs. No. 12 seeds
+Straight-up record over the same period: 27-21 (5-seeds win more than they lose)
+Interpretation: 5-seeds win outright but fail to cover because the spread is inflated by seed perception
+
+Model implication: Remove seed number as a predictive input. Use only efficiency metrics, tempo, and schedule strength (WAB) to generate expected spreads. Compare model output to market line to identify value.
+
+4. Round-by-Round ATS Tendencies
+First Round (Round of 64)
+TrendDataUnders ATS (last 2 tournaments)45-26-1 (63.4%)Line movement directionBettors moving lines have had positive ROIInterpretationTeams play conservatively vs. unfamiliar opponents; shooting is cold in new arenas
+Model flag: Apply a mild Under lean to first-round totals, especially when both teams have top-40 adjusted defensive ratings.
+Second Round (Round of 32)
+TrendDataBettors moving opening lines ATS27-45-1 (37.5%) since 2017InterpretationShort turnaround; public loads up on survivors; books adjust aggressively
+Model flag: Fade public line movement in the second round. Second-round spreads are among the least efficient in the entire tournament.
+Second Round — Double-Digit Favorites
+TrendDataSU record52-2ATS record34-20 (63%)Totals16 of last 25 went Under (64%)
+Model flag: Heavy favorites in Round of 32 cover at high rates but games tend to go Under — total may be set too high relative to defensive pace.
+Elite Eight
+TrendData2/3/4 seeds as expected favorites (SU)8-17 since 2005Same group ATS4-21 (16%)InterpretationChalk is historically very poor at this stage; fatigue, scouting, and parity converge
+Model flag: This is the highest-confidence systemic edge in the tournament. Flag all Elite Eight matchups where a 2, 3, or 4 seed is favored. The model should aggressively consider the underdog.
+Final Four
+TrendDataOutright winner ATS37-7-2 (84.1%) since 2001InterpretationThe better team not only wins but dominates; blowouts are common
+Model flag: In Final Four games, weight moneyline and spread in the same direction — the winning team covers at an extremely high rate.
+Championship Game
+TrendDataFavorites of 3+ points (SU)15-3 since 1998Same group ATS13-5 (72.2%)
+Model flag: Favorites in the title game are reliable ATS. Apply a positive weight to chalk at this stage — the opposite of Elite Eight behavior.
+
+5. Totals Modeling: Tempo Is the Primary Driver
+Blended Tempo Calculation
+Expected Possessions = ((Team A AdjTempo + Team B AdjTempo) / 2)
+Expected Total = Expected Possessions × ((Team A AdjOE + Team B AdjOE) / 200) × 2
+
+Adjust for neutral site (remove any home-court pace inflation)
+When two fast-paced teams meet, interaction compounds upward; two slow teams pull total down significantly
+
+Totals Inefficiency Signals
+
+Public inflates totals for high-profile programs regardless of tempo data
+Mid-major totals are set with less precision — books have less data; Torvik has more
+eFG% mismatch between two teams' offensive eFG% and the opponent's defensive eFG% allowed signals whether the total is set for a real shooting environment or a reputation one
+
+Model implication: For totals, the most important inputs are: AdjTempo (both teams), AdjOE (both teams), opponent eFG% allowed (both teams). Market totals that deviate more than 4 points from your model projection represent value.
+
+6. Coaching as a Quantifiable Factor
+
+Coaching impact is larger in college basketball than any other major sport, amplified further in single-elimination tournament play
+Separate each coach's tournament ATS record from regular-season record — these diverge significantly for some coaches
+Coaches who repeatedly cover as favorites demonstrate genuine neutral-site game-planning ability
+Available data: Torvik includes coach-level filtering; cross-reference with historical tournament ATS data by coach
+
+Model implication: Add a binary or ordinal coaching feature representing tournament ATS history (e.g., >55% tournament ATS cover rate over last 5 appearances = positive signal).
+
+7. Conference Narrative: What to Ignore
+Finding: Conference-level ATS trends are not a reliable predictive input.
+
+The market already prices in conference reputation
+Oddsmakers set lines on current-season form, not conference history
+Strength of conference varies year to year; the teams, players, and spreads all change
+Betting "SEC teams" or fading "Big East teams" based on conference ATS history is a losing strategy
+
+Model implication: Do not include conference as a predictive feature. Use only team-level Torvik metrics.
+
+8. Line Movement as a Signal
+
+First 24 hours after bracket release are highest-value for identifying sharp vs. public money
+If a line moves against the seed (e.g., 5-seed opens -7, drops to -5.5), sharp money has acted
+Reverse line movement (line moves opposite to betting percentages) is a reliable sharp signal
+Mid-major lines are set with less precision and move more in response to sharp action
+
+Model implication: If integrating line movement data, treat reverse line movement as a positive feature for the team receiving sharp action.
+
+9. First-Round Decision Checklist (Apply at Bracket Release)
+
+Pull AdjOE, AdjDE, AdjTempo, eFG%, Barthag, and WAB for every first-round matchup
+Compute efficiency differential and expected spread; compare to market opening line
+Flag any high seed with AdjDE rank outside the top 60 — potential upset candidate regardless of seed
+Compute blended tempo and expected total; compare to market total
+Track line movement for 24 hours post-release; note reverse line movement
+Apply first-round Under lean to games featuring two top-40 defensive teams
+Note Elite Eight region structure — identify which bracket path creates a heavy 2/3/4 chalk situation
+
+
+10. Projected No. 1 Seeds (2026 Tournament)
+SeedTeamConferenceNotes1DukeACC30-2, 17-1 conf1MichiganBig Ten29-2, 19-1 conf1ArizonaBig 1230-2, 16-2 conf1FloridaSEC25-6, 16-2 conf
+
+Summary: Feature Priority for Model Training
+PriorityFeatureSourceTarget1AdjDE differentialTorvikSpread2AdjOE differentialTorvikSpread3AdjTempo (blended)TorvikTotal4eFG% differentialTorvikSpread + Total5Barthag differentialTorvikWin probability / ML6WAB gapTorvikSeed vs. efficiency signal7Round numberStructuralATS lean by round8Coach tournament ATSHistoricalSpread modifier9Line movement directionMarketSharp signal10Seed numberBracketExclude or inverse-weight
+
+Sources: Bart Torvik (barttorvik.com), VSiN historical ATS data, academic research on NCAAB efficiency modeling
